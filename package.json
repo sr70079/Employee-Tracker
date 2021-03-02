@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/sr70079/Emplyee-Tracker#readme",
   "dependencies": {
+    "console-table-printer": "^2.7.5",
     "inquirer": "^8.0.0",
     "mysql": "^2.18.1"
   }
