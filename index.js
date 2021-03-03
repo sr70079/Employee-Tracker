@@ -76,7 +76,7 @@ const start = () => {
   };
 
 //  function to view table of employee
-  const viewEmployee = () => {
+const viewEmployee = () => {
         connection.query('SELECT * FROM employee', (err, data) => {
             if(err) throw err;    
                 printTable(data);    
@@ -85,188 +85,223 @@ const start = () => {
         );           
     };
 
-//  function to view table of employees by department 
-    const viewByDepartment = () => {
+// view all employees by department
+const viewByDepartment = () => {    
 
-        connection.query('SELECT employee.first_name, employee.last_name, department.name As Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id', (err, data) =>{
-            if(err) throw err;    
-                printTable(data);    
-                start();
+    inquirer
+        .prompt({
+          name: 'employByDept',
+          type: 'list',
+          message: 'Which department would you like to see the employees for?',
+          choices: [
+              'engineering',
+              'finance',
+              'legal',
+              'sales',
+              'exit'
+          ],
         })
+        .then((answer) => {
+        if (answer.employByDept === 'engineering') {
+            viewEngineering();
+        } else if (answer.employByDept === 'finance') {
+            viewFinance();
+        }  else if (answer.employByDept === 'legal') {
+            viewLegal();
+        } else if (answer.employByDept === 'sales') {
+            viewSales();
+        } else {
+            start();
+        }
 
-        // inquirer
-        // .prompt({
-        //   name: 'employByDept',
-        //   type: 'list',
-        //   message: 'Which department would you like to see the employees for?',
-        //   choices: [
-        //       'engineering',
-        //       'finance',
-        //       'legal',
-        //       'sales',
-        //       'exit'
-        //   ],
-        // })
-        // .then((answer) => {
-        //     if (answer.start === 'engineering') {
-        //         viewEngineering();
-        //     } else if (answer.start === 'finance') {
-        //         viewFinance();
-        //     }  else if (answer.start === 'legal') {
-        //         viewLegal();
-        //     } else if (answer.start === 'sales') {
-        //         viewSales();
-        //     } else {
-        //         start();
-        //     }
-
-        //     const viewEngineering = () => {
-        //         connection.query('SELECT employee.employee_id, employee.first_name, employee.last_name, department.department_name FROM employee LEFT JOIN role ON employee.role_id = role.role_id LEFT JOIN department ON role.department_id = department.department_id ORDER BY department.department_name', (err, data) => {
-        //             if(err) throw err;    
-        //                 printTable(data);    
-        //                 start();
-        //             }         
-        //         );           
-        //     };        
-
-        //     connection.query('SELECT employees FROM department', (err, data) => {
-
-        //         if(err) throw err;  
-
-        //             printTable(data);  
-
-        //             start();
-
-        //         }
-        //     );  
-        // });         
-    };
-
-    const viewManager = () => {
-
-            
-      
-    };
-
-    const addEmployee = () => {
         
-        inquirer.prompt([
-            {
-                name: 'first_name',
-                type: 'input',
-                message: 'What is employee first name?',
-            },
-            {
-                name: 'last_name',
-                type: 'input',
-                message: 'What is employee last name?',
-            },
-            {
-                name: 'role',
-                type: 'list',
-                message: 'What is employee role?',
-                choices: [
-                    'engineering',
-                    'finance',
-                    'legal',
-                    'sales'
-                ],
-            },
-            {
-                name: 'manager',
-                type: 'list',
-                message: 'Who is employee manager?',
-                choices: [
-                    //list all managers here
-                ],
-            }
-        ]).then((data) => {
-            connection.query(
-                "INSERT INTO employee SET ?",
-                {
-                    first_name: data.first_name,
-                    last_name: data.last_name,
-                    role: data.role,
-                    manager: data.manager,
-                },
-                (error) => {
+    });
+}
 
-                    if (error) throw error;
-                    console.log('Employee has been added successfully!')
+const viewEngineering = () => {
+    connection.query('SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id WHERE department.name = \'Engineering\' ORDER BY department.name', (err, data) => {
+        if(err) throw err;    
+            printTable(data);    
+            start();
+        }         
+    );           
+};        
 
-                    start();
-                }
-            )
-        });
-            
-      
-    };
+const viewFinance = () => {
+    connection.query('SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id WHERE department.name = \'Finance\' ORDER BY department.name', (err, data) => {
+        if(err) throw err;    
+            printTable(data);    
+            start();
+        }         
+    );           
+};        
 
-    const removeEmployee = () => {
+const viewLegal = () => {
+    connection.query('SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id WHERE department.name = \'Legal\' ORDER BY department.name', (err, data) => {
+        if(err) throw err;    
+            printTable(data);    
+            start();
+        }         
+    );           
+};        
 
-            
-      
-    };
+const viewSales = () => {
+    connection.query('SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id WHERE department.name = \'Sales\' ORDER BY department.name', (err, data) => {
+        if(err) throw err;    
+            printTable(data);    
+            start();
+        }         
+    );           
+};        
 
-    const updateEmployeeRole = () => {
+const viewManager = () => {
 
-            
-      
-    };
-
-    const updateEmployeeManager = () => {
-
-            
-      
-    };
-
-    const viewRoles = () => {
-
-            
-      
-    };
-
-    const addRole = () => {
-
-            
-      
-    };
-
-    const removeRole = () => {
-
-            
-      
-    };
-   
-    const viewAllDepartments = () => {
-
-        connection.query('SELECT * FROM department', (err, data) => {
-            if(err) throw err;        
-
-                printTable(data);
     
+};
+
+const addEmployee = () => {
+    
+    inquirer.prompt([
+        {
+            name: 'first_name',
+            type: 'input',
+            message: 'What is employee first name?',
+        },
+        {
+            name: 'last_name',
+            type: 'input',
+            message: 'What is employee last name?',
+        },
+        {
+            name: 'role',
+            type: 'list',
+            message: 'What is employee role?',
+            choices: [
+                'engineering',
+                'finance',
+                'legal',
+                'sales'
+            ],
+        },
+        {
+            name: 'manager',
+            type: 'list',
+            message: 'Who is employee manager?',
+            choices: [
+                //list all managers here
+            ],
+        }
+    ]).then((data) => {
+        connection.query(
+            "INSERT INTO employee SET ?",
+            {
+                first_name: data.first_name,
+                last_name: data.last_name,
+                role: data.role,
+                manager: data.manager,
+            },
+            (error) => {
+
+                if (error) throw error;
+                console.log('Employee has been added successfully!')
+
                 start();
-            }           
+            }
+        )
+    });
+        
     
-        );      
-    };
+};
 
-    const addDepartment = () => {
+const removeEmployee = () => {
 
-            
-      
-    };
+   
+};
 
-    const removeDepartment = () => {
+const updateEmployeeRole = () => {
 
-            
-      
-    }; 
+        
+    
+};
+
+const updateEmployeeManager = () => {
+
+        
+    
+};
+
+// view all roles of employees
+const viewRoles = () => {
+    connection.query('SELECT * FROM role', (err, data) => {
+        if(err) throw err;    
+            printTable(data);    
+            start();
+        }         
+    );        
+};
+
+const addRole = () => {
+
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "role",
+            message: "What is the role you would like to add?"
+        }
+    ]).then((data) => {
+        connection.query(
+            "INSERT INTO role SET ?",
+            {
+                title: data.title
+            },
+            (error) => {
+                
+                if (error) throw error;
+                printTable(data)
+                console.log("New role has been added.")
+
+                start();
+            }
+        )
+    });
+
+        
+    
+};
+
+const removeRole = () => {
+
+        
+    
+};
+
+// view all departments of employees
+const viewAllDepartments = () => {
+    connection.query('SELECT * FROM department', (err, data) => {
+        if(err) throw err;  
+            printTable(data);    
+            start();
+        }       
+    );      
+};
+
+const addDepartment = () => {
+
+        
+    
+};
+
+const removeDepartment = () => {
+
+
+        
+    
+}; 
 
 connection.connect((err) => {
-    if (err) throw err;
-    // run the start function after the connection is made to prompt the user
-    start();
-  });
+if (err) throw err;
+// run the start function after the connection is made to prompt the user
+start();
+});
 
 
