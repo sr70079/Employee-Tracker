@@ -86,68 +86,30 @@ const viewEmployee = () => {
         );           
     };
 
-
-const viewByDepartment = () => {    
-
-    inquirer
-        .prompt({
+//view employee by department 
+const viewByDepartment = () => {   
+    connection.query('SELECT * FROM department', (err, data) => {
+        const allDepartments = data.map((allDepartments) => {
+            return {
+                value: allDepartments.id,
+                name: allDepartments.name 
+            }
+        })
+        if(err) throw err;
+        inquirer.prompt({
           name: 'employByDept',
           type: 'list',
           message: 'Which department would you like to see the employees for?',
-          choices: getDepartments()
-        })
-        .then((answer) => {
-        if (answer.employByDept === 'engineering') {
-            viewEngineering();
-        } else if (answer.employByDept === 'finance') {
-            viewFinance();
-        }  else if (answer.employByDept === 'legal') {
-            viewLegal();
-        } else if (answer.employByDept === 'sales') {
-            viewSales();
-        } else {
-            start();
-        }
-
-        
-    });
-}
-//view engineers
-// const viewEngineering = () => {
-//     connection.query('SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id WHERE department.name = \'Engineering\' ORDER BY department.name', (err, data) => {
-//         if(err) throw err;    
-//             printTable(data);    
-//             start();
-//         }         
-//     );           
-// };        
-//view finance
-// const viewFinance = () => {
-//     connection.query('SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id WHERE department.name = \'Finance\' ORDER BY department.name', (err, data) => {
-//         if(err) throw err;    
-//             printTable(data);    
-//             start();
-//         }         
-//     );           
-// };        
-//view legal
-// const viewLegal = () => {
-//     connection.query('SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id WHERE department.name = \'Legal\' ORDER BY department.name', (err, data) => {
-//         if(err) throw err;    
-//             printTable(data);    
-//             start();
-//         }         
-//     );           
-// };        
-// view sales
-// const viewSales = () => {
-//     connection.query('SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id WHERE department.name = \'Sales\' ORDER BY department.name', (err, data) => {
-//         if(err) throw err;    
-//             printTable(data);    
-//             start();
-//         }         
-//     );           
-// };        
+          choices: allDepartments
+        }).then((data) => {
+            connection.query(`SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id WHERE department.id = ${data.employByDept} ORDER BY department.name`, (err, data) => {
+                if(err) throw err;    
+                    printTable(data);    
+                    start();
+                });             
+        });          
+    });          
+};
 
 // view all employees by manager
 const viewManager = () => {
