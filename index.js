@@ -117,7 +117,7 @@ const viewByDepartment = () => {
         
     });
 }
-
+//view engineers
 const viewEngineering = () => {
     connection.query('SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id WHERE department.name = \'Engineering\' ORDER BY department.name', (err, data) => {
         if(err) throw err;    
@@ -126,7 +126,7 @@ const viewEngineering = () => {
         }         
     );           
 };        
-
+//view finance
 const viewFinance = () => {
     connection.query('SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id WHERE department.name = \'Finance\' ORDER BY department.name', (err, data) => {
         if(err) throw err;    
@@ -135,7 +135,7 @@ const viewFinance = () => {
         }         
     );           
 };        
-
+//view legal
 const viewLegal = () => {
     connection.query('SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id WHERE department.name = \'Legal\' ORDER BY department.name', (err, data) => {
         if(err) throw err;    
@@ -144,7 +144,7 @@ const viewLegal = () => {
         }         
     );           
 };        
-
+//view sales
 const viewSales = () => {
     connection.query('SELECT employee.id, employee.first_name, employee.last_name, department.name FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id WHERE department.name = \'Sales\' ORDER BY department.name', (err, data) => {
         if(err) throw err;    
@@ -154,8 +154,15 @@ const viewSales = () => {
     );           
 };        
 
+// view all employees by manager
 const viewManager = () => {
 
+    connection.query('select e.first_name as \'Employee First Name\', e.last_name as \'Employee Last Name\', m.first_name as \'Manager First Name\', m.last_name as \'Manager Last Name\' from employee as e left join employee as m on e.id = m.manager_id where m.id is not null order by m.first_name', (err, data) => {
+        if(err) throw err;    
+            printTable(data);    
+            start();
+        }         
+    );     
     
 };
 
