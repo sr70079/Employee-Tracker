@@ -75,6 +75,19 @@ const start = () => {
       });
   };
 
+const getDepartments = () => {
+    let departments = [];
+    connection.query("SELECT * FROM department", (err, data) => {
+        departments = data.map((departments) => {
+          return {
+            key: department.name,
+            value: department.id,
+          };
+        });
+    })
+    return departments;
+}
+
 //  function to view table of employee
 const viewEmployee = () => {
         connection.query('SELECT * FROM employee', (err, data) => {
@@ -93,13 +106,7 @@ const viewByDepartment = () => {
           name: 'employByDept',
           type: 'list',
           message: 'Which department would you like to see the employees for?',
-          choices: [
-              'engineering',
-              'finance',
-              'legal',
-              'sales',
-              'exit'
-          ],
+          choices: getDepartments()
         })
         .then((answer) => {
         if (answer.employByDept === 'engineering') {
@@ -292,13 +299,34 @@ const viewAllDepartments = () => {
     );      
 };
 
+//add a new department 
 const addDepartment = () => {
+    inquirer.prompt([
+        {
+            name: 'addDepartment',
+            type: 'input',
+            message: 'What type of department would you like to add?',
+        },
+    ]).then((data) => {
+        connection.query(
+            "INSERT INTO department SET ?",
+            {
+                name: data.addDepartment
+            },
+            (error) => {
 
-        
-    
+                if (error) throw error;
+                console.log('Department has been added successfully!')
+
+                start();
+            }
+        )
+    });    
 };
 
 const removeDepartment = () => {
+
+
 
 
         
