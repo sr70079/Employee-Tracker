@@ -32,7 +32,7 @@ const start = () => {
         'Add employee', 
         'Remove employee', 
         'Update employee role', 
-        'Update employee manager', 
+        // 'Update employee manager', 
         'View all roles', 
         'Add role', 
         'Remove role', 
@@ -55,9 +55,11 @@ const start = () => {
             removeEmployee();
         } else if (answer.start === 'Update employee role') {
             updateEmployeeRole();
-        } else if (answer.start === 'Update employee manager') {
-            updateEmployeeManager();
-        } else if (answer.start === 'View all roles') {
+        } 
+        // else if (answer.start === 'Update employee manager') {
+        //     updateEmployeeManager();
+        // } 
+        else if (answer.start === 'View all roles') {
             viewRoles();
         } else if (answer.start === 'Add role') {
             addRole();
@@ -213,17 +215,56 @@ const removeEmployee = () => {
     });   
 };
 
+
 const updateEmployeeRole = () => {
 
-        
+    connection.query('SELECT * FROM role', (err, data) => {
+        const allRoles = data.map((allRoles) => {
+            return {
+                value: allRoles.id,
+                name: allRoles.title 
+            }
+        });
+        if(err) throw err;
+        connection.query('SELECT CONCAT(first_name, " ", last_name) as \'name\', id FROM employee', (err, data) => {
+            const allEmployees = data.map((allEmployees) => {
+                return {
+                    value: allEmployees.id,
+                    name: allEmployees.name,
+                }
+            })
+            if(err) throw err;
+            inquirer.prompt([
+                {
+                    name: "updateEmployee",
+                    type: "list",                
+                    message: "Which employee would you like to update?",
+                    choices: allEmployees
+                },
+                {
+                    name: "updateRole",
+                    type: "list",                
+                    message: "Which role would you like to update employee to?",
+                    choices: allRoles
+                },
+            ]).then((data) => {
+                connection.query(
+                    `UPDATE employee set role_id=${data.updateRole} WHERE id=${data.updateEmployee}`);
+                if (err) throw err;
+                console.log('Employee role has been updated successfully!')
+
+                start();
+            });          
+        });  
+    });                 
     
 };
 
-const updateEmployeeManager = () => {
+// const updateEmployeeManager = () => {
 
         
     
-};
+// };
 
 // view all roles of employees
 const viewRoles = () => {
