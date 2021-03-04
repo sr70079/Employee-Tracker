@@ -217,7 +217,6 @@ const removeEmployee = () => {
 
 
 const updateEmployeeRole = () => {
-
     connection.query('SELECT * FROM role', (err, data) => {
         const allRoles = data.map((allRoles) => {
             return {
@@ -244,7 +243,7 @@ const updateEmployeeRole = () => {
                 {
                     name: "updateRole",
                     type: "list",                
-                    message: "Which role would you like to update employee to?",
+                    message: "What is the employee\'s new role?",
                     choices: allRoles
                 },
             ]).then((data) => {
