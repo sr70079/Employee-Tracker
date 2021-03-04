@@ -7,6 +7,7 @@ UNC Bootcamp Homework #12
 
 ### Table of Contents:
 * [Description](#description)
+* [Demo](#demo)
 * [Installation](#installation)
 * [Usage](#usage)
 * [Contributing](#contributing)
@@ -17,6 +18,11 @@ UNC Bootcamp Homework #12
 ### Description: 
 
 Using a Content Managment System, architect and build a solution for managing a company's employees using node, inquirer, and MYSQL
+
+### Demo
+
+Demo of Employee Tracker application
+<img src="assets/employee-tracker.gif">
 
 ### Installation: 
 
